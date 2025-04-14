@@ -1,0 +1,26 @@
+{
+  "name": "templates_scraping",
+  "version": "1.0.0",
+  "description": "Synchronously grab the currently organized list of templates and adopt a rating mechanism that is friendly to independent developers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "kbmjj123",
+  "license": "ISC",
+  "devDependencies": {
+    "@octokit/rest": "^21.1.1",
+    "@types/node": "^22.14.1",
+    "@types/pg": "^8.11.12",
+    "@vercel/node": "^5.1.14",
+    "bullmq": "^5.48.1",
+    "dotenv": "^16.5.0",
+    "ioredis": "^5.6.1",
+    "pg": "^8.14.1",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.4"
+  }
+}
