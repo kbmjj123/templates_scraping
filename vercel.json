@@ -8,14 +8,12 @@
   ],
   "routes": [
     {
+      "src": "/api/(.*?)\\.ts",
+      "dest": "/api/$1.ts"
+    },
+    {
       "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "dest": "/api/$1.ts"
     }
-  ],
-  "env": {
-    "SUPABASE_URL": "@supabase-url",
-    "SUPABASE_SERVICE_ROLE_KEY": "@supabase-service-role-key",
-    "SUPABASE_DB_HOST": "@supabase-db-host",
-    "SUPABASE_DB_PORT": "@supabase-db-port"
-  }
+  ]
 }

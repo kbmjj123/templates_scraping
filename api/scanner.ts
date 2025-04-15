@@ -1,8 +1,9 @@
-import { Database } from '../lib/db'
-import { Queue } from '../lib/queue'
+import { Database } from '../lib/db.js'
+import { Queue } from '../lib/queue.js'
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 
 export default async (req: VercelRequest, res: VercelResponse) => {
+  console.info('开始请求了！')
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
   }
@@ -12,15 +13,11 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   const db = new Database()
   
   try {
-    const templates = await db.query<{ id: number; repo_url: string }>(`
-      SELECT id, repo_url FROM templates 
-      WHERE last_scanned < NOW() - INTERVAL '7 days'
-      LIMIT 10
-    `)
+    const templates = await db.query<{ id: number; visit_link: string }>()
+    console.info(templates)
 
-    templates.rows.forEach(t => {
-      queue.queue.add('scan-template', t) // 这里使用 queue.queue 而不是直接使用 queue，因为 queue 是一个实例，而不是一个队列对象
-      // queue.add('scan-template', t)
+    templates.rows.forEach((t: { id: number; visit_link: string }) => {
+      queue.add('scan-template', t) // 直接使用queue对象添加任务
     })
 
     res.json({ 
@@ -30,6 +27,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
   } catch (error) {
     console.error(error)
     // 由于 error 的类型为 unknown，需要先判断是否为 Error 类型
+    console.log(error)
     if (error instanceof Error) {
       res.status(500).json({ error: error.message });
     } else {

@@ -1,5 +1,9 @@
 import { createClient } from '@supabase/supabase-js'
+import dotenv from 'dotenv'
 
+dotenv.config({
+	path: '.env.local'
+})
 export class Database {
   private supabase: ReturnType<typeof createClient>
 
@@ -10,39 +14,28 @@ export class Database {
     )
   }
 
-  async query<T = any>(sql: string, params?: any[]): Promise<{ rows: T[] }> {
-    const { data, error } = await this.supabase.rpc('query', {
-      sql,
-      params
-    })
+  async query<T = any>(): Promise<{ rows: T[] }> {
+    const { data: templates, error } = await this.supabase
+      .from('templates')
+      .select('id, visit_link')
+      // .lt('last_scanned', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
+      // .or('last_scanned.is.null')
+      // .limit(20)
     
-    if (error) throw error
+    if (error) {
+      console.error('Query failed:', error.message);
+      throw error;
+    }
     // 对 data 进行类型断言，确保它符合 T[] 类型
-    return { rows: data as T[] }
+    return { rows: templates as T[] }
   }
 
-  async updateTemplate(id: number, data: TemplateUpdateData) {
+  async updateTemplate(id: number, data: any) {
     const { error } = await this.supabase
       .from('templates')
-      .update({
-        tech_stack: data.tech_stack,
-        stars: data.stars,
-        forks: data.forks,
-        last_commit: data.last_commit,
-        risk_score: data.risk_score,
-        risk_factors: data.risk_factors
-      })
+      .update(data)
       .eq('id', id)
     
     if (error) throw error
   }
-}
-
-interface TemplateUpdateData {
-  tech_stack: object
-  stars: number
-  forks: number
-  last_commit: Date
-  risk_score: number
-  risk_factors: string[]
 }

@@ -101,6 +101,7 @@ dist
 .vuepress/dist
 
 .specstory/
+temp/
 
 # vuepress v2.x temp and cache directory
 .temp
@@ -136,3 +137,4 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+.vercel
